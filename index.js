@@ -25,7 +25,7 @@ forumRouter.route('/threads')
       if (err) {
         console.log(err)
       } else {
-        res.send(thread._id);
+        res.json({thread_id: thread._id});
       }
 
     });
@@ -77,7 +77,7 @@ forumRouter.route('/threads/:thread_id')
 app.use(forumRouter);
 
 app.listen(3000, function() {
-  console.log('Get to posting at localhost:3000.')
+  console.log('Get to posting at localhost:3000.');
 });
 
 // New post constructor
