@@ -8,9 +8,6 @@ var threadSchema = new mongoose.Schema({
   replies: {type: Array, default: []}
 });
 
-var ThreadModel = mongoose.model('ThreadModel', threadSchema);
+var ThreadModel = module.exports = mongoose.model('ThreadModel', threadSchema);
 
-
-
-module.exports = ThreadModel;
 
