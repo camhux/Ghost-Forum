@@ -20,8 +20,6 @@ exports.Thread = {
 
   postThread: function(title, author, body) {
 
-    var output;
-
     var thread = new ThreadModel({
 
       title: title,
@@ -30,82 +28,101 @@ exports.Thread = {
 
     });
 
-    thread.save(function(err) {
+    return new Promise(function(resolve, reject) {
 
-      if (err) {
-        console.log(err);
-      } else {
-        output = thread._id;
-      }
+      thread.save(function(err) {
+
+        if (err) {
+
+          reject(err);
+
+        } else {
+
+          resolve(thread._id);
+
+        }
+
+      });
 
     });
-
-    return output;
 
   },
 
   getThreads: function() {
 
-    var output;
+    return new Promise(function(resolve, reject) {
 
-    output = ThreadModel.find(null, 'title author timestamp', function(err, threads) {
+      ThreadModel.find(null, 'title author timestamp', function(err, threads) {
 
-      if (err) {
-        console.log(err);
-        return err;
-      } else {
-        return threads;
-      }
+        if (err) {
+
+          console.log(err);
+          reject(err);
+
+        } else {
+
+          resolve(threads);
+
+        }
+
+      });
 
     });
-
-    console.log(output);
-
-    return output;
 
   },
 
   getFullThread: function(id) {
 
-    var output;
+    return new Promise(function(resolve, reject) {
 
-    ThreadModel.findById(id, function(err, thread) {
+      ThreadModel.findById(id, function(err, thread) {
 
-      if (err) {
-        console.log(err);
-      } else {
-        output = thread;
-      }
+        if (err) {
+
+          reject(err);
+
+        } else {
+
+          resolve(thread);
+
+        }
+
+      });
 
     });
-
-    return output;
 
   }
 
 }
 
+
 exports.Post = {
 
   reply: function(thread_id, author, body) {
 
-    var output;
+    var newPost = new PostModel({author: author, body: body});
 
-    ThreadModel.findByIdAndUpdate(thread_id, 
+    return new Promise(function(resolve, reject) {
 
-      {$push: {replies: new PostModel({author: author, body: body})}},
+      ThreadModel.findByIdAndUpdate(thread_id,
 
-      function(err, thread) {
+        {$push: {replies: newPost}},
 
-        if (err) {
-          console.log(err);
-        } else {
-          output = thread;
-        }
+        function(err, thread) {
+
+          if (err) {
+
+            reject(err);
+
+          } else {
+
+            resolve(thread);
+
+          }
+
+        });
 
     });
-
-    return output;
 
   }
 

@@ -17,18 +17,30 @@ forumRouter.route('/threads')
 
   .post(function(req, res) {
 
-    Thread.postThread(req.body.title, req.body.author, req.body.text);
+    Thread.postThread(req.body.title, req.body.author, req.body.text)
 
-    res.status(200).end();
+      .then(function(thread_id){
+
+        res.json({thread_id: thread_id});
+
+      })
+
+      .catch(function(err){
+        res.send(err);
+      });
 
   })
 
 
   .get(function(req, res) {
 
-    var data = Thread.getThreads();
-    console.log(data);
-    res.json(data);
+    Thread.getThreads()
+
+      .then(function(threads) {
+
+        res.json(threads);
+
+      });
 
   });
 
@@ -36,16 +48,25 @@ forumRouter.route('/threads/:thread_id')
   
   .post(function(req, res) {
 
-    Post.reply(req.params.thread_id, req.body.author, req.body.text);
+    Post.reply(req.params.thread_id, req.body.author, req.body.text)
 
-    res.status(200).end();
+      .then(function(thread) {
+
+        res.json(thread);
+
+      });
 
   })
 
   .get(function(req, res) {
 
-    var data = Thread.getFullThread(req.params.thread_id);
-    res.send(data);
+    Thread.getFullThread(req.params.thread_id)
+
+      .then(function(thread) {
+
+        res.json(thread);
+
+      });
 
   });
 
