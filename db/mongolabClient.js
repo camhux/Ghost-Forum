@@ -28,68 +28,19 @@ exports.Thread = {
 
     });
 
-    return new Promise(function(resolve, reject) {
-
-      thread.save(function(err) {
-
-        if (err) {
-
-          reject(err);
-
-        } else {
-
-          resolve(thread._id);
-
-        }
-
-      });
-
-    });
+    return thread.save();
 
   },
 
   getThreads: function() {
 
-    return new Promise(function(resolve, reject) {
-
-      ThreadModel.find(null, 'title author timestamp', function(err, threads) {
-
-        if (err) {
-
-          console.log(err);
-          reject(err);
-
-        } else {
-
-          resolve(threads);
-
-        }
-
-      });
-
-    });
+   return ThreadModel.find(null, 'title author timestamp').exec();
 
   },
 
   getFullThread: function(id) {
 
-    return new Promise(function(resolve, reject) {
-
-      ThreadModel.findById(id, function(err, thread) {
-
-        if (err) {
-
-          reject(err);
-
-        } else {
-
-          resolve(thread);
-
-        }
-
-      });
-
-    });
+    return ThreadModel.findById(id);
 
   }
 
@@ -100,29 +51,9 @@ exports.Post = {
 
   reply: function(thread_id, author, body) {
 
-    var newPost = new PostModel({author: author, body: body});
+    return ThreadModel.findByIdAndUpdate(thread_id,
 
-    return new Promise(function(resolve, reject) {
-
-      ThreadModel.findByIdAndUpdate(thread_id,
-
-        {$push: {replies: newPost}},
-
-        function(err, thread) {
-
-          if (err) {
-
-            reject(err);
-
-          } else {
-
-            resolve(thread);
-
-          }
-
-        });
-
-    });
+      {$push: {replies: new PostModel({author: author, body: body})}});
 
   }
 

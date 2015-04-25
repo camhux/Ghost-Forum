@@ -26,7 +26,9 @@ forumRouter.route('/threads')
       })
 
       .catch(function(err){
+
         res.send(err);
+        
       });
 
   })
