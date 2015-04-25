@@ -34,13 +34,27 @@ exports.Thread = {
 
   getThreads: function() {
 
-   return ThreadModel.find(null, 'title author timestamp').exec();
+   return ThreadModel.find(null, 'title author timestamp');
 
   },
 
-  getFullThread: function(id) {
+  getFullThread: function(thread_id) {
 
-    return ThreadModel.findById(id);
+    return ThreadModel.findById(thread_id);
+
+  },
+
+  editThreadBody: function(thread_id, text) {
+
+    return ThreadModel.findByIdAndUpdate(thread_id,
+
+      {$set: {body: text}});
+
+  },
+
+  deleteThread: function(thread_id) {
+
+    return ThreadModel.findByIdAndRemove(thread_id);
 
   }
 
@@ -49,11 +63,15 @@ exports.Thread = {
 
 exports.Post = {
 
-  reply: function(thread_id, author, body) {
+  reply: function(thread_id, author, text) {
+
+    var newPost = new PostModel({author: author, body: text});
 
     return ThreadModel.findByIdAndUpdate(thread_id,
 
-      {$push: {replies: new PostModel({author: author, body: body})}});
+      {$push: {replies: newPost}},
+
+      {new: true});
 
   }
 

@@ -28,7 +28,7 @@ forumRouter.route('/threads')
       .catch(function(err){
 
         res.send(err);
-        
+
       });
 
   })
@@ -43,6 +43,18 @@ forumRouter.route('/threads')
         res.json(threads);
 
       });
+
+  })
+
+  .put(function(req, res) {
+
+    res.status(405).end();
+
+  })
+
+  .delete(function(req, res) {
+
+    res.status(405).end();
 
   });
 
@@ -70,7 +82,31 @@ forumRouter.route('/threads/:thread_id')
 
       });
 
-  });
+  })
+
+  .put(function(req, res) {
+
+    Thread.editThreadBody(req.params.thread_id, req.body.text)
+
+      .then(function(thread) {
+
+        res.json(thread);
+
+      });
+
+  })
+
+  .delete(function(req, res) {
+
+    Thread.deleteThread(req.params.thread_id)
+
+      .then(function() {
+
+        res.end();
+
+      });
+
+  })
 
 app.use(forumRouter);
 
